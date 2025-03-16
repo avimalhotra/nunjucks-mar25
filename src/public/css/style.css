@@ -1,0 +1,24 @@
+*{ margin: 0; box-sizing: border-box;}
+body{ font:16px/1.3 system-ui, sans-serif;}
+a{ text-decoration: none;}
+
+html{ font-size: 15px;}
+.container{ max-width: 1200px; margin: auto;}
+
+header{ padding: 10px; background: #cdc;}
+
+nav{ padding: 10px; background: #333;}
+nav ul{ list-style: none; padding: 0; display: flex; gap: 0 1rem;}
+nav a{ display: block; display: block; padding: 0.5rem 1rem; color: #ddd; }
+
+main{ padding: 10px; background: #ddd;}
+main p{ margin: 1rem 0;}
+main ol{ margin: 1rem 0;}
+main li{ margin: 5px 0;}
+main ol a{ display: inline-block; padding: 5px 10px; }
+main table{ border-collapse: collapse; border: 1px solid #888; margin: 1rem 0;}
+main table :is(td,th){ border: 1px solid #888; padding: 5px; }
+main table thead tr{ background: #333; color: #fff;}
+
+
+footer{ padding: 10px; background: #222; color: #fff; text-align: center;}

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{title}}</title>
+    <meta name="description" content="{{title}}">
+    <link rel="icon" href="/img/icon.png">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="container">
+        {% include "header.html" %}
+        {% include "nav.html" %}
+        <main>
+            <h2>{{data.name | title}} car information</h2>
+            <p>On Road price: {{data.price + (data.price*0.12) }} </p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Property</th>
+                        <th>Value</th>
+                    </tr>
+                </thead>
+            {% for i,j in data %}   
+             <tr><th>{{ i | title }}</th><td>{{j}}</td></tr>
+            {% endfor %}  
+            </table>
+            <a href="/cars">Go Back</a>
+            
+        </main>
+        {% include "footer.html" %}
+    </div>
+</body>
+</html>

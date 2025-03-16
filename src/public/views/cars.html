@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{title}}</title>
+    <meta name="description" content="{{title}}">
+    <link rel="icon" href="/img/icon.png">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="container">
+        {% include "header.html" %}
+        {% include "nav.html" %}
+        <main>
+            <h2>List of cars available</h2>
+            <ol>
+                {% for i in data %}
+                <li><a href="cars/{{i.name | replace(" ","-")}}">{{i.name | title}}</a></li>
+                {% endfor %}
+            </ol>
+            
+        </main>
+        {% include "footer.html" %}
+    </div>
+</body>
+</html>

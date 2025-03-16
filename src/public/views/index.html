@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{title}}</title>
+    <meta name="description" content="{{title}}">
+    <link rel="icon" href="/img/icon.png">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="container">
+        {% include "header.html" %}
+        {% include "nav.html" %}
+        <main>
+            <h2>{{subtitle}}</h2>
+            <p>Car name is {{car.name | title}} and power is {{car.power}}bhp</p>
+            <p>Cars: {{data.join(", ")}} </p>
+            <!-- <p>Cars: {{data.join(",") | replace(" "," - ")}} </p> -->
+        </main>
+        {% include "footer.html" %}
+    </div>
+</body>
+</html>
