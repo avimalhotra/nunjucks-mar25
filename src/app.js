@@ -4,6 +4,16 @@ const path=require("path");
 require("dotenv").config();
 const port=process.env.PORT || 3000;
 
+const bodyParser=require('body-parser'); 
+    
+    // parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: false }));
+
+const mongoose=require("mongoose");
+const db=require('./dao');
+const [car,pin]=[require("./models/cars"),require("./models/pin")];
+
+
 app.use(express.static(path.resolve("src/public")));
 
 const nunjucks=require("nunjucks");
@@ -15,38 +25,47 @@ nunjucks.configure(path.resolve('src/public/views'),{
     watch:true
 }); 
 
-const cars=[
-    {"name": "swift", "type": "hatchback", "price":830000},
-    {"name": "dzire", "type": "sedan", "price":980000},
-    {"name": "ciaz", "type": "sedan", "price":1100000},
-    {"name": "baleno", "type": "hatchback", "price":880000},
-    {"name": "fronx", "type": "hatchback", "price":1150000},
-    {"name": "brezza", "type": "suv", "price":1250000},
-    {"name": "grand vitara", "type": "suv", "price":1990000},
-    {"name": "alto", "type": "hatchback", "price":400000},
-    {"name": "wagon r", "type": "hatchback", "price":500000},
-    {"name": "jimny", "type": "suv", "price":1400000}
-];
-
 
 app.get("/",(req,res)=>{
-    res.status(200).render("index.html",{title:"Car Blog", subtitle:"Main", car:{name:"swift", power:82}, data:["swift","alto k10","baleno"]})
+    car.find({},{_id:0,__v:0}).then(i=>{
+        res.status(200).render("index.html",{title:"Car Blog", subtitle:"Main", data:i});
+    }).catch(e=>{
+        res.status(200).render("index.html",{title:"Car Blog", subtitle:"Main", data:[{err:"no data"}]});
+    });
+   
 });
 
 app.get("/about",(req,res)=>{
     res.status(200).render("about.html",{title:"About Us"});
 });
 
-app.get("/cars",(req,res)=>{
-    res.status(200).render("cars.html",{title:"Cars available", data:cars});
+app.get("/add",(req,res)=>{
+    res.status(200).render("add.html",{title:"Add cars"});
 });
-app.get("/cars/:car",(req,res)=>{
-    const car=req.params.car.replaceAll("-"," ");
-
-    const x=cars.filter(i=>i.name==car)[0]; 
+app.post("/add",(req,res)=>{
     
-    res.status(200).render("car.html",{title:x.name, data:x });
+    let data=new car({
+        _id:new mongoose.Types.ObjectId(),
+        name:req.body.name,
+        type:req.body.type,
+        price:req.body.price,
+    });
+
+   data.save().then(i=>res.status(200).send("data saved")).catch(i=>res.status(200).send(i));
+
 });
+
+
+// app.get("/cars",(req,res)=>{
+//     res.status(200).render("cars.html",{title:"Cars available", data:cars});
+// });
+// app.get("/cars/:car",(req,res)=>{
+//     const car=req.params.car.replaceAll("-"," ");
+
+//     const x=cars.filter(i=>i.name==car)[0]; 
+    
+//     res.status(200).render("car.html",{title:x.name, data:x });
+// });
 
 
 app.get("/**",(req,res)=>{

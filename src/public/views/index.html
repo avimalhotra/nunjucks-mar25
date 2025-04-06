@@ -14,9 +14,13 @@
         {% include "nav.html" %}
         <main>
             <h2>{{subtitle}}</h2>
-            <p>Car name is {{car.name | title}} and power is {{car.power}}bhp</p>
-            <p>Cars: {{data.join(", ")}} </p>
-            <!-- <p>Cars: {{data.join(",") | replace(" "," - ")}} </p> -->
+
+            <table>
+                {% for i in data %}   
+                     <tr><td>{{ i.name }}</td><td>{{i.type}}</td><td>{{ i.price }}</td></tr>
+                {% endfor %}    
+            </table>
+            
         </main>
         {% include "footer.html" %}
     </div>

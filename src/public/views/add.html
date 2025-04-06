@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{title}}</title>
+    <meta name="description" content="{{title}}">
+    <link rel="icon" href="/img/icon.png">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="container">
+        {% include "header.html" %}
+        {% include "nav.html" %}
+        <main>
+            <h2>Add Cars in Database</h2> 
+            <form action="/add" method="post">
+                <div class="my-1"><label>Name: <input name="name" type="text" required class="input"></label></div>
+                <div class="my-1"><label>Type: <input name="type" type="text" required class="input"></label></div>
+                <div class="my-1"><label>Price: <input name="price" type="number" required class="input" min="1" max="200000000"></label></div>
+                <div class="my-1"><button class="btn">Send</button></div>
+            </form>           
+        </main>
+        {% include "footer.html" %}
+    </div>
+</body>
+</html>
