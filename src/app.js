@@ -32,11 +32,13 @@ app.get("/",(req,res)=>{
     }).catch(e=>{
         res.status(200).render("index.html",{title:"Car Blog", subtitle:"Main", data:[{err:"no data"}]});
     });
-   
 });
 
 app.get("/about",(req,res)=>{
     res.status(200).render("about.html",{title:"About Us"});
+});
+app.get("/cars",(req,res)=>{
+    res.status(200).render("cars.html",{title:"Cars"});
 });
 
 app.get("/add",(req,res)=>{
@@ -54,6 +56,33 @@ app.post("/add",(req,res)=>{
    data.save().then(i=>res.status(200).send("data saved")).catch(i=>res.status(200).send(i));
 
 });
+
+
+app.get("/api",(req,res)=>{
+    car.find({},{_id:0,__v:0}).then(i=>{
+        res.status(200).json(i);
+    }).catch(e=>{
+        res.status(404).json([{error:"unknown error"}]);
+    });
+});
+
+app.get("/search/:car",(req,res)=>{
+    const query=req.params.car;
+    
+        car.find({name:query},{_id:0,__v:0}).then(i=>{
+            res.status(200).json(i);
+        }).catch(e=>{
+            res.status(404).json([{error:"unknown error"}]);
+        });
+        // car.find({name:new RegExp(query)},{_id:0,__v:0}).then(i=>{
+        //     res.status(200).json(i);
+        // }).catch(e=>{
+        //     res.status(404).json([{error:"unknown error"}]);
+        // });
+    
+    
+});
+
 
 
 // app.get("/cars",(req,res)=>{
