@@ -20,7 +20,8 @@ main table{ border-collapse: collapse; border: 1px solid #888; margin: 1rem 0;}
 main table :is(td,th){ border: 1px solid #888; padding: 5px; }
 main table thead tr{ background: #333; color: #fff;}
 .input{ border: 1px solid #000; background: #fff; border-radius: 5px; height: 35px; padding: 5px 10px;}
-.btn{ border: 1px solid #000; background: #fff; border-radius: 5px; height: 35px; padding: 5px 10px;}
+.btn{ cursor: pointer; border: 1px solid #000; background: #fff; border-radius: 5px; height: 35px; padding: 5px 10px;}
 .my-1{ margin: 1rem 0;}
+.to-right{ float: right;}
 
 footer{ padding: 10px; background: #222; color: #fff; text-align: center;}

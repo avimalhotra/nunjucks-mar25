@@ -4,19 +4,68 @@ const path=require("path");
 require("dotenv").config();
 const port=process.env.PORT || 3000;
 
+const session=require('express-session');
+app.set('trust proxy', 1); 
+
+app.use(session({
+    secret:"session",
+    resave:false,
+    saveUninitialized:true,
+    cookie:{secure:false}
+}));
+
 const bodyParser=require('body-parser'); 
     
     // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json()); 
 
 const mongoose=require("mongoose");
 const db=require('./dao');
-const [car,pin]=[require("./models/cars"),require("./models/pin")];
+const [car,pin,user]=[require("./models/cars"),require("./models/pin"),require("./models/users")];
+
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+passport.serializeUser(function (user, done) {
+    done(null, user[0].id);
+  });
+passport.deserializeUser(function (user, next) {
+    next(null, user);
+});
+
+passport.use('local', new LocalStrategy((username, password, done) => {
+    
+    user.find({ username: username }).then(user=>{
+      if( user.length==0 ){
+          return done(null, null, { message: 'No user found!' });
+      }
+      else  if (user[0].password !== password) {
+          return done(null, null, { message: 'Password is incorrect!' });
+      }
+      else{
+          return done(null, user, null);
+      }
+      })
+  }
+));
+
+function isAuthenticated(req, res, next) {
+    if (req.isAuthenticated()) {
+      next();
+    } else {
+      res.status(403).send('Forbidden');
+    }
+}
 
 
 app.use(express.static(path.resolve("src/public")));
 
 const nunjucks=require("nunjucks");
+const { title } = require("process");
 // configure
 nunjucks.configure(path.resolve('src/public/views'),{
     express:app,
@@ -24,6 +73,7 @@ nunjucks.configure(path.resolve('src/public/views'),{
     noCache:false,
     watch:true
 }); 
+
 
 
 app.get("/",(req,res)=>{
@@ -41,9 +91,56 @@ app.get("/cars",(req,res)=>{
     res.status(200).render("cars.html",{title:"Cars"});
 });
 
-app.get("/add",(req,res)=>{
+/* passport */
+app.get("/login",(req,res)=>{
+    res.status(200).render("login.html",{title:"Login"});
+});
+app.post("/login",(req,res)=>{
+    passport.authenticate('local',  (err, user, info) =>{
+     
+        if (err) {
+          res.render('login.html', { error: err, title:"Login" });
+        } 
+        else if (!user) {
+          res.render('login.html', { errorMessage: info.message, title:"Login" });
+        } 
+        else {
+          //setting users in session
+          req.logIn(user, function (err) {
+            if (err) {
+              res.render('login.html', { error: err, title:"Login" });
+            } else {
+              res.status(200).render("add.html",{title:"Add Cars in db", name:user[0].username})
+             }
+          })
+        }
+      })(req, res);
+});
+
+
+
+app.get("/add", isAuthenticated,(req,res)=>{
     res.status(200).render("add.html",{title:"Add cars"});
 });
+
+app.get('/logout', (req, res) => { 
+    if (req.session) {
+        req.session.destroy((err)=> {
+          if(err) {
+            return next(err);
+          } else {
+              res.clearCookie('connect.sid');
+              req.logout(()=>{});
+              if (!req.user) { 
+                  res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+              }
+              res.render('login.html',{ msg:"Logout Successfully"});
+          }
+        });
+      }
+});
+
+
 app.post("/add",(req,res)=>{
     
     let data=new car({
@@ -79,8 +176,6 @@ app.get("/search/:car",(req,res)=>{
         // }).catch(e=>{
         //     res.status(404).json([{error:"unknown error"}]);
         // });
-    
-    
 });
 
 
