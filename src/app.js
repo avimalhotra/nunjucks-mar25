@@ -4,6 +4,33 @@ const path=require("path");
 require("dotenv").config();
 const port=process.env.PORT || 3000;
 
+const compression=require("compression");
+const rateLimit=require("express-rate-limit");
+const helmet=require("helmet");
+
+function shouldCompress (req, res) {
+    if (req.headers['x-no-compression']) {
+      // don't compress responses with this request header
+      return false
+    }
+  
+    // fallback to standard filter function
+    return compression.filter(req, res)
+  }
+
+app.use(compression({ filter: shouldCompress }));
+
+const limiter = rateLimit({
+	windowMs: 15 * 60 * 1000, // 15 minutes
+	limit: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes).
+	standardHeaders: 'draft-8', // draft-6: `RateLimit-*` headers; draft-7 & draft-8: combined `RateLimit` header
+	legacyHeaders: false, // Disable the `X-RateLimit-*` headers.
+});
+
+app.use(limiter);
+app.use(helmet());
+
+
 const session=require('express-session');
 app.set('trust proxy', 1); 
 
