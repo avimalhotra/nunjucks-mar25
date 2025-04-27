@@ -1,5 +1,6 @@
 "use strict";
 
+if(document.querySelector("main form input")){
 document.querySelector("main form input").addEventListener("input",function(){
     const x=this.value.toLowerCase();
 
@@ -17,3 +18,13 @@ document.querySelector("main form input").addEventListener("input",function(){
     }
     
 });
+}
+
+
+// if(document.querySelector(".carsdata")){
+//     fetch("/api").then(i=>i.json()).then(i=>{
+//         i.forEach(((elem,ind)=>{
+//             document.querySelector(".carsdata tbody").innerHTML+=`<tr><td>${++ind}</td><td>${elem.name}</td><td>${elem.type}</td><td>${elem.price}</td></tr>`;
+//         }))
+//     });
+// }
